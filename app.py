@@ -42,6 +42,8 @@ class MainWindow(Gtk.Window):
 			grid.attach(entry_label, 0, i+4, 1, len(dict))
 			j = i + 4
 
+
+
 			for user, passwd in dict.items():
 
 				username_label = Gtk.Label(label=user)
@@ -53,7 +55,9 @@ class MainWindow(Gtk.Window):
 
 				j += 1
 
-			i += 1
+			hseparator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+			grid.attach_next_to(hseparator, entry_label, Gtk.PositionType.BOTTOM, 3, 1)
+			i += 2
 
 		self.add(grid)
 
