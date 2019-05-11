@@ -14,9 +14,10 @@ def verify(button):
 		master_passwd_window.hide()
 		main_win = MainWindow()
 		main_win.connect("destroy", Gtk.main_quit)
-		main_win.set_default_size(400, 500)
+		main_win.set_default_size(500, 600)
 		main_win.set_border_width(30)
 		main_win.show_all()
+
 		print("logged in")
 	else:
 		print("nope")
@@ -31,7 +32,8 @@ grid.set_row_spacing(10)
 grid.set_column_homogeneous(True)
 
 input_box = Gtk.Entry()
-input_box.set_text("Password")
+input_box.set_placeholder_text("Password")
+input_box.set_visibility(False)
 grid.attach(input_box, 1, 0, 1, 1)
 
 password_label = Gtk.Label(label="Master Password")
@@ -42,8 +44,6 @@ download_button.connect("clicked", verify)
 grid.attach_next_to(download_button, input_box, Gtk.PositionType.BOTTOM, 1, 2)
 
 master_passwd_window.add(grid)
-
-
-
 master_passwd_window.show_all()
 Gtk.main()
+
