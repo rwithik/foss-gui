@@ -6,10 +6,9 @@ from gi.repository import Notify
 
 import pickle
 import os
-import pyperclip
 
 class MainWindow(Gtk.Window):
-	"""docstring for MainWindow"""
+
 	def __init__(self):
 		self.file_empty_flag = False
 		self.entries = {}
@@ -21,6 +20,7 @@ class MainWindow(Gtk.Window):
 		self.__grid = self.get_grid()
 		self.add(self.__grid)
 	
+
 
 	def add_new_entry(self, button, wb_input, un_input, pw_input):
 
@@ -41,26 +41,21 @@ class MainWindow(Gtk.Window):
 		website = wb_input.get_text()
 		username = un_input.get_text()
 		password = pw_input.get_text()
+		self.file_empty_flag = False
 
 		if (website in self.entries.keys()):
 			self.entries[website][username] = password
 		else:
 			self.entries[website] = {username: password}
-		print(self.entries)
+
 		try:
 			self.__dump_to_file(self.entries, "entries")
 			self.send_notification("New Entry Successfully Added! :)")
 			self.__redraw()
-			# # Gtk.main_quit()
-			# self.remove(self.__grid)
-			# # Gtk.main()
-			# self.__grid = self.get_grid()
-			# self.add(self.__grid)
-			# self.__grid.show()
-			# self.show_all()
-
-		except:
+		except Exception as e:
 			self.send_notification("An Error Occured! New Entry was not Added! :(")
+			print(e)
+
 
 
 	def send_notification(self, title):
@@ -68,44 +63,45 @@ class MainWindow(Gtk.Window):
 		n = Notify.Notification.new(title)
 		n.show()		
 
+
+
 	def on_copy_clicked(self, button, website, username, passwd):
-		print(passwd)
-		# pyperclip.copy(passwd)
 		os.system("echo \"" + passwd +  "\" | xclip -sel clip")
 		self.send_notification("Password for " + website + ":" + username + " copied to clipboard! :)")
+
+
 
 	def delete_clicked(self, button, website, username):
 		try:
 			del self.entries[website][username]
 			if(len(self.entries[website]) == 0):
 				del self.entries[website]
+
 			self.__dump_to_file(self.entries, "entries")
 			self.send_notification("Deleted " + website + ":" + username + " from the list!")
-			print("Removing " + website + ":" + username + " from the list!")
 			self.__redraw()
-			# # Gtk.main_quit()
-			# self.remove(self.__grid)
-			# # Gtk.main()
-			# self.__grid = self.get_grid()
-			# self.add(self.__grid)
-			# self.__grid.show()
-			# self.show_all()
-		except KeyError:
+
+		except KeyError as e:
 			self.send_notification("An Error Occured! Could not Remove Entry :(")
+			print(e)
+
+
 
 	def __dump_to_file(self, dict, file):
 		with open(file, "wb") as f:
 			pickle.dump(dict, f)
 
+
+
 	def __redraw(self):
-		# self.__redraw()
-		# Gtk.main_quit()
 		self.remove(self.__grid)
-		# Gtk.main()
+
 		self.__grid = self.get_grid()
 		self.add(self.__grid)
+
 		self.__grid.show()
 		self.show_all()
+
 
 
 	def get_grid(self):
@@ -115,7 +111,6 @@ class MainWindow(Gtk.Window):
 		grid.set_column_homogeneous(True)
 		grid.set_hexpand(True)
 		grid.set_vexpand(True)
-		# grid.set_scrollable(True)
 
 
 		add_new_label = Gtk.Label(label = "Add or Update an Entry: ")
@@ -143,8 +138,10 @@ class MainWindow(Gtk.Window):
 		try:
 			with open("entries", "rb") as f:
 				self.entries = pickle.load(f)
+
 			if len(self.entries) == 0:
 				self.file_empty_flag = True
+
 		except:
 			self.file_empty_flag = True
 			no_entries_label = Gtk.Label("Add a New Entry to get started!")
@@ -152,11 +149,12 @@ class MainWindow(Gtk.Window):
 
 		if (not self.file_empty_flag):
 			for website, dict in self.entries.items():
+
 				entry_label = Gtk.Label(label=website)
 				grid.attach(entry_label, 0, self.__i + 4, 1, len(dict))
+
 				self.__j = self.__i + 4
-	
-	
+
 				for user, passwd in dict.items():
 	
 					username_label = Gtk.Label(label=user)
@@ -174,5 +172,6 @@ class MainWindow(Gtk.Window):
 	
 				hseparator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
 				grid.attach_next_to(hseparator, entry_label, Gtk.PositionType.BOTTOM, 3, 1)
+
 				self.__i += 2
 		return grid
