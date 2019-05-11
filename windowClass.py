@@ -24,20 +24,6 @@ class MainWindow(Gtk.Window):
 
 	def add_new_entry(self, button, wb_input, un_input, pw_input):
 
-		# {
-		# website: {
-		# 			username: password, 
-		# 			username: password, 
-		# 			...
-		# 		}, 
-		# website: {
-		# 			username: password, 
-		# 			username: password
-		# 			...
-		# 		}, 
-		#	...
-		# }
-
 		website = wb_input.get_text()
 		username = un_input.get_text()
 		password = pw_input.get_text()
@@ -55,19 +41,6 @@ class MainWindow(Gtk.Window):
 		except Exception as e:
 			self.send_notification("An Error Occured! New Entry was not Added! :(")
 			print(e)
-
-
-
-	def send_notification(self, title):
-
-		n = Notify.Notification.new(title)
-		n.show()		
-
-
-
-	def on_copy_clicked(self, button, website, username, passwd):
-		os.system("echo \"" + passwd +  "\" | xclip -sel clip")
-		self.send_notification("Password for " + website + ":" + username + " copied to clipboard! :)")
 
 
 
@@ -90,17 +63,6 @@ class MainWindow(Gtk.Window):
 	def __dump_to_file(self, dict, file):
 		with open(file, "wb") as f:
 			pickle.dump(dict, f)
-
-
-
-	def __redraw(self):
-		self.remove(self.__grid)
-
-		self.__grid = self.get_grid()
-		self.add(self.__grid)
-
-		self.__grid.show()
-		self.show_all()
 
 
 
@@ -175,3 +137,27 @@ class MainWindow(Gtk.Window):
 
 				self.__i += 2
 		return grid
+
+
+
+	def send_notification(self, title):
+
+		n = Notify.Notification.new(title)
+		n.show()		
+
+
+
+	def on_copy_clicked(self, button, website, username, passwd):
+		os.system("echo \"" + passwd +  "\" | xclip -sel clip")
+		self.send_notification("Password for " + website + ":" + username + " copied to clipboard! :)")
+
+
+
+	def __redraw(self):
+		self.remove(self.__grid)
+
+		self.__grid = self.get_grid()
+		self.add(self.__grid)
+
+		self.__grid.show()
+		self.show_all()

@@ -24,7 +24,7 @@ def verify(button):
 		main_win.set_border_width(30)
 		main_win.show_all()
 	else:
-		n = Notify.Notification.new("Wrong Password! ")
+		n = Notify.Notification.new("Wrong Password!")
 		n.show()
 
 master_passwd_window = Gtk.Window(title="Master Password")
