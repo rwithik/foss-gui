@@ -1,0 +1,3 @@
+[submodule "foss-php"]
+	path = foss-php
+	url = https://github.com/justine05/foss-php
